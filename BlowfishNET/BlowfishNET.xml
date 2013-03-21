@@ -1,0 +1,497 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BlowfishNET</name>
+    </assembly>
+    <members>
+        <member name="T:BlowfishNET.BlowfishAlgorithm">
+            <summary>Implementation of the Blowfish algorithm as a standard component for
+            the .NET security framework.</summary>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.#ctor">
+            <summary>Default constructor. Starts as an uninitialized ECB instance.</summary>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.CreateEncryptor(System.Byte[],System.Byte[])">
+            <see cref="M:System.Security.Cryptography.SymmetricAlgorithm.CreateEncryptor(System.Byte[],System.Byte[])"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.CreateDecryptor(System.Byte[],System.Byte[])">
+            <see cref="M:System.Security.Cryptography.SymmetricAlgorithm.CreateDecryptor(System.Byte[],System.Byte[])"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.GenerateKey">
+            <see cref="M:System.Security.Cryptography.SymmetricAlgorithm.GenerateKey"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.GenerateIV">
+            <see cref="M:System.Security.Cryptography.SymmetricAlgorithm.GenerateIV"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.TransformBlock(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <see cref="M:System.Security.Cryptography.ICryptoTransform.TransformBlock(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishAlgorithm.TransformFinalBlock(System.Byte[],System.Int32,System.Int32)">
+            <see cref="M:System.Security.Cryptography.ICryptoTransform.TransformFinalBlock(System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.BlockSize">
+            <see cref="P:System.Security.Cryptography.SymmetricAlgorithm.BlockSize"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.IV">
+            <see cref="P:System.Security.Cryptography.SymmetricAlgorithm.IV"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.Key">
+            <see cref="P:System.Security.Cryptography.SymmetricAlgorithm.Key"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.KeySize">
+            <see cref="P:System.Security.Cryptography.SymmetricAlgorithm.KeySize"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.Mode">
+            <see cref="P:System.Security.Cryptography.SymmetricAlgorithm.Mode"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.CanReuseTransform">
+            <see cref="P:System.Security.Cryptography.ICryptoTransform.CanReuseTransform"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.CanTransformMultipleBlocks">
+            <see cref="P:System.Security.Cryptography.ICryptoTransform.CanTransformMultipleBlocks"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.InputBlockSize">
+            <see cref="P:System.Security.Cryptography.ICryptoTransform.InputBlockSize"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishAlgorithm.OutputBlockSize">
+            <see cref="P:System.Security.Cryptography.ICryptoTransform.OutputBlockSize"/>
+        </member>
+        <member name="T:BlowfishNET.BlowfishCBC">
+            <summary>Blowfish CBC implementation.</summary>
+            <remarks>Use this class to encrypt or decrypt byte arrays or a single blocks
+            with Blowfish in CBC (Cipher Block Block Chaining) mode. This is the recommended
+            way to use Blowfish.NET, unless certain requirements (e.g. moving block without
+            decryption) exist.
+            </remarks>
+        </member>
+        <member name="T:BlowfishNET.BlowfishECB">
+            <summary>Blowfish ECB implementation.</summary>
+            <remarks>Use this class to encrypt or decrypt byte arrays or a single
+            block with Blowfish in the ECB (Electronic Code Book) mode. The key
+            length can be flexible from zero up to 56 bytes.</remarks>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.MAX_KEY_LENGTH">
+            <summary>The maximum and recommended key size in bytes.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.BLOCK_SIZE">
+            <summary>The block size in bytes.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.pbox">
+            <summary>Runtime p-box.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.sbox1">
+            <summary>Runtime s-box #1.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.sbox2">
+            <summary>Runtime s-box #2.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.sbox3">
+            <summary>Runtime s-box #3.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.sbox4">
+            <summary>Runtime s-box #4.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.block">
+            <summary>Single block cache.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.isWeakKey">
+            <summary>1 if a weak key was detected, 0 if not and -1 if it hasn't
+            been determined yet.</summary>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.Initialize(System.Byte[],System.Int32,System.Int32)">
+            <summary>Resets the instance with new or initial key material. Allows the switch of
+            keys at runtime without any new internal object allocation.</summary>
+            <param name="key">The buffer with the key material.</param>
+            <param name="ofs">Position at which the key material starts in the buffer.</param>
+            <param name="len">Size of the key material, up to MAX_KEY_LENGTH bytes.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.#ctor">
+            <summary>Zero constructor, properly initializes an instance. Initialize afterwards
+            to set up a valid key!</summary>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <see cref="M:BlowfishNET.BlowfishECB.Initialize(System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.Invalidate">
+            <summary> Deletes all internal data structures and invalidates this instance.</summary>
+            <remarks>Call this method as soon as the work with a particular instance is done,
+            so no sensitive translated key material remains. The instance is invalid after this
+            call and usage can lead to unexpected results!</remarks> 
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.RunSelfTest">
+            <summary>To execute a selftest.</summary>
+            <remarks>Call this method to make sure that the implemenation is able to produce
+            valid output according to the specification. This should usually be done at process
+            startup time, before the usage of this class and its inherited variants.</remarks>
+            <returns>True if the selftest passed or false is it failed. In such a case you must
+            not use the cipher to avoid data corruption!</returns>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.EncryptBlock(System.UInt32,System.UInt32,System.UInt32@,System.UInt32@)">
+            <summary>Encrypts a single block.</summary>
+            <param name="hi">The high 32bit word of the block.</param>
+            <param name="lo">The low 32bit word of the block.</param>
+            <param name="outHi">Where to put the encrypted high word.</param>
+            <param name="outLo">Where to put the encrypted low word.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.DecryptBlock(System.UInt32,System.UInt32,System.UInt32@,System.UInt32@)">
+            <summary>Decrypts a single block.</summary>
+            <param name="hi">The high 32bit word of the block.</param>
+            <param name="lo">The low 32bit word of the block.</param>
+            <param name="outHi">Where to put the decrypted high word.</param>
+            <param name="outLo">Where to put the decrypted low word.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>Encrypts byte buffers.</summary>
+            <remarks>Use this method to encrypt bytes from one array to another one. You can also 
+            use the same array for input and output. Note that the number of bytes must be adjusted
+            to the block size of the algorithm. Overlapping bytes will not be encrypted. No check for
+            buffer overflows are made.</remarks>
+            <param name="dataIn">The input buffer.</param>
+            <param name="posIn">Where to start reading in the input buffer.</param>
+            <param name="dataOut">The output buffer.</param>
+            <param name="posOut">Where to start writing to the output buffer.</param>
+            <param name="count">The number ob bytes to encrypt.</param>
+            <returns>The number of bytes processed.</returns>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.Decrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>Decrypts single bytes.</summary>
+            <remarks>Use this method to decrypt bytes from one array to another one. You can also use
+            the same array for input and output. Note that the number of bytes must be adjusted to the
+            block size of the algorithm. Overlapping bytes will not be decrypted. No check for buffer
+            overflows are made.</remarks>
+            <param name="dataIn">The input buffer.</param>
+            <param name="posIn">Where to start reading in the input buffer.</param>
+            <param name="dataOut">The output buffer.</param>
+            <param name="posOut">Where to start writing to the output buffer.</param>
+            <param name="count">Number ob bytes to decrypt.</param>
+            <returns>The number of bytes processed.</returns>
+        </member>
+        <member name="M:BlowfishNET.BlowfishECB.Clone">
+            <remarks>Cloning can be very useful if you need multiple instances all using
+            the same key, since the expensive cipher setup will be bypassed.</remarks>
+            <see cref="M:System.ICloneable.Clone"/>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.PBOX_INIT">
+            <summary>The P-box initialization data.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.SBOX_INIT_1">
+            <summary>The first S-box initialization data.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.SBOX_INIT_2">
+            <summary>The second S-box initialization data.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.SBOX_INIT_3">
+            <summary>The third S-box initialization data.</summary>
+        </member>
+        <member name="F:BlowfishNET.BlowfishECB.SBOX_INIT_4">
+            <summary>The fourth S-box initialization data.</summary>
+        </member>
+        <member name="P:BlowfishNET.BlowfishECB.IsWeakKey">
+            <summary>To check if the key used is weak.</summary>
+            <remarks>If a key is weak it means that eventually an attack is easier to apply than
+            just a simple brute force on keys. Due to the randomness in the key setup process
+            such a case however is unlikely to happen, yet checking after each setup might still
+            be the preferred way. In the case of a weak key detected a simple recreation with a
+            different key (or just a different salt value) is the recommended solution. For
+            performance reasons we don't do the weak key check during the initialization, but on
+            demand only, and then only once to determine the flag.</remarks>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.SetIV(System.Byte[],System.Int32)">
+            <summary>Sets the initialization vector (IV) with an offset.</summary>
+            <param name="buf">The buffer containing the new IV material.</param>
+            <param name="ofs">Where the IV material starts.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.GetIV(System.Byte[],System.Int32)">
+            <summary>Gets the current IV material (of the size of one block).</summary>
+            <param name="buf">The buffer to copy the IV to.</param>
+            <param name="ofs">Where to start copying.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>Default constructor.</summary>
+            <remarks>The IV needs to be assigned after the instance has been created!</remarks>
+            <see cref="M:BlowfishNET.BlowfishECB.Initialize(System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.#ctor">
+            <summary>Zero key constructor.</summary>
+            <remarks>After construction you need to initialize the instance and then apply the IV.</remarks>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.Invalidate">
+            <see cref="M:BlowfishNET.BlowfishECB.Invalidate"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.EncryptBlock(System.UInt32,System.UInt32,System.UInt32@,System.UInt32@)">
+            <see cref="M:BlowfishNET.BlowfishECB.EncryptBlock(System.UInt32,System.UInt32,System.UInt32@,System.UInt32@)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.DecryptBlock(System.UInt32,System.UInt32,System.UInt32@,System.UInt32@)">
+            <see cref="M:BlowfishNET.BlowfishECB.DecryptBlock(System.UInt32,System.UInt32,System.UInt32@,System.UInt32@)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <see cref="M:BlowfishNET.BlowfishECB.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.Decrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <see cref="M:BlowfishNET.BlowfishECB.Decrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCBC.Clone">
+            <see cref="M:BlowfishNET.BlowfishECB.Clone"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishCBC.IV">
+            <summary>The current initialization vector (IV), which measures one block.</summary>
+        </member>
+        <member name="T:BlowfishNET.BlowfishCFB">
+            <summary>Blowfish CFB implementation.</summary>
+            <remarks>Use this class to encrypt or decrypt byte arrays in CFB (Cipher Feedback) mode.
+            Useful if you don't want to deal with padding of blocks (in comparsion to CBC), however
+            a safe initialization vector (IV) is still needed. Notice that the data does not have to
+            be block-aligned in comparsion to ECB and CBC, so byte-per-byte streaming is possible.
+            </remarks>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.SetIV(System.Byte[],System.Int32)">
+            <summary>Sets the initialization vector (IV) with an offset.</summary>
+            <param name="buf">The buffer containing the new IV material.</param>
+            <param name="ofs">Where the IV material starts.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.GetIV(System.Byte[],System.Int32)">
+            <summary>Gets the current IV material (of the size of one block).</summary>
+            <param name="buf">The buffer to copy the IV to.</param>
+            <param name="ofs">Where to start copying.</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>Default constructor.</summary>
+            <remarks>The IV needs to be assigned after the instance has been created!</remarks>
+            <see cref="M:BlowfishNET.BlowfishECB.Initialize(System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.#ctor">
+            <summary>Zero key constructor.</summary>
+            <remarks>After construction you need to initialize the instance and then apply the IV.</remarks>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.Invalidate">
+            <see cref="M:BlowfishNET.BlowfishECB.Invalidate"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <see cref="M:BlowfishNET.BlowfishECB.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.Decrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <see cref="M:BlowfishNET.BlowfishECB.Decrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishCFB.Clone">
+            <see cref="M:BlowfishNET.BlowfishECB.Clone"/>
+        </member>
+        <member name="P:BlowfishNET.BlowfishCFB.IV">
+            <summary>The current initialization vector (IV), which measures one block.</summary>
+        </member>
+        <member name="T:BlowfishNET.BlowfishSimple">
+            <summary>An easy-to-use-string encryption solution using Blowfish/CBC.</summary>
+            <remarks>As a simple solution for developers, who want nothing more than protect
+            single strings with a password, this class provides the necessary functionality.
+            The password (aka as key) is hashed using the SHA-1 implementation of the .NET
+            framework. The random number generator for the CBC initialization vector (IV)
+            and BASE64 are used from the framework's security services.</remarks>
+        </member>
+        <member name="M:BlowfishNET.BlowfishSimple.VerifyKey(System.String,System.String)">
+            <summary>To verify a key before it is used for decryption.</summary>
+            <remarks> By passing the currently available key and a key checksum
+            retrieved during the former encryption process you will be assured that
+            the key will decrypt the data correctly.</remarks> 
+            <param name="key">The key to verify.</param> 
+            <param name="keyChecksum">The original key checksum.</param> 
+            <returns>True if key seems to be the right one or false if it doesn't match.
+            </returns> 
+        </member>
+        <member name="M:BlowfishNET.BlowfishSimple.#ctor">
+            <summary>Empty constructor. Before using the instance you MUST call Initialize(),
+            otherwise any result or behavior is unpredictable!</summary>
+        </member>
+        <member name="M:BlowfishNET.BlowfishSimple.#ctor(System.String)">
+            <summary>Default constructor.</summary>
+            <param name="keyStr">The string which is used as the key material (aka as
+            password or passphrase). Internally the UTF-8 representation of this string
+            is used, hashed with SHA-1. The result is then a 160bit binary key. Notice
+            that this transformation will not make weak (meaning short or easily guessable)
+            keys any safer!</param>
+        </member>
+        <member name="M:BlowfishNET.BlowfishSimple.Initialize(System.String)">
+            <summary>Initializes the instance with a (new) key string.</summary>
+            <param name="keyStr">The key material.</param>
+            <see cref="M:BlowfishNET.BlowfishSimple.#ctor(System.String)"/>
+        </member>
+        <member name="M:BlowfishNET.BlowfishSimple.Encrypt(System.String)">
+            <summary>Encrypts a string.</summary>
+            <remarks>For efficiency the given string will be UTF-8 encoded and padded to
+            the next 8byte block border. The CBC IV plus the encrypted data will then be
+            BASE64 encoded and  returned as the final encryption result.</remarks>
+            <param name="plainText">The string to encrypt.</param> 
+            <returns>The encrypted string.</returns> 
+        </member>
+        <member name="M:BlowfishNET.BlowfishSimple.Decrypt(System.String)">
+            <summary>Decrypts a string which was formely generated by the Encrypt()
+            method and a particular key.</summary>        
+            <remarks>The string has to be decrypted with the same key, otherwise the
+            result will be simply garbage. If you want to check if the key is the right
+            one use the VerifyKey() method.</remarks>
+            <param name="cipherText">The string to decrypt.</param> 
+            <returns>The decrypted string, or null on error (usually caused by a wrong
+            key passed in).</returns> 
+        </member>
+        <member name="P:BlowfishNET.BlowfishSimple.KeyChecksum">
+            <summary>The secure checksum of the key used for encryption.</summary>
+            <remarks>Store this checksum somewhere to be able to check later on by
+            calling the VerifyKey() method, to see if a key matches for decryption
+            or not.</remarks> 
+        </member>
+        <member name="T:BlowfishNET.JavaInterop.BlowfishEasy">
+            <summary>This class encrypts and decrypts strings the same way like it is
+            done in the BlowfishJ package. Strings can be directly exchanged between these
+            two platforms, given that both sides expect standard Unicode characters. Notice
+            that this solution is less versatile than BlowfishSimple, especially since it
+            lacks the ability to verify if keys/passwords do match.</summary>
+        </member>
+        <member name="M:BlowfishNET.JavaInterop.BlowfishEasy.#ctor(System.String)">
+            <summary>Creates a new BlowfishEasy instance. Notice that this ctor
+            supports only the new way of how string are set up. There is no support
+            for the old BlowfishJ key setup available right now (which had a
+            design flaw by not using the full Unicode character space).</summary>
+            <param name="password">The password used for encryption and decryption.</param>
+        </member>
+        <member name="M:BlowfishNET.JavaInterop.BlowfishEasy.EncryptString(System.String)">
+            <summary>Encrypts a string. The output size is always twice the size of
+            the input, plus between 18 and 32 additional characters.</summary>
+            <param name="plainText">The plaintext.</param>
+            <returns>The encrypted string.</returns>
+        </member>
+        <member name="M:BlowfishNET.JavaInterop.BlowfishEasy.DecryptString(System.String)">
+            <summary> Decrypts a string fomerly encrypted with the EncryptString() method
+            and the same password. If the password is wrong the result will be either
+            garbage or the method will fails and return null.</summary>
+            <param name="cipherText">The encrypted text to decrypt.</param>
+            <returns>The decrypted text or null if an error occured, which can be due to
+            wrong encoding or a bad padding size, which is usually caused by a wrong
+            password.</returns>
+        </member>
+        <member name="T:BlowfishNET.JavaInterop.BlowfishStreamMode">
+            <summary>Stream direction definitions for the BlowfishStream class.</summary>
+        </member>
+        <member name="F:BlowfishNET.JavaInterop.BlowfishStreamMode.Read">
+            <summary>Stream is opened for decryption or reading respectively.</summary>
+        </member>
+        <member name="F:BlowfishNET.JavaInterop.BlowfishStreamMode.Write">
+            <summary>Stream is opened for encryption or writing respectively.</summary>
+        </member>
+        <member name="T:BlowfishNET.JavaInterop.BlowfishStream">
+            <summary>Stream factory. The instances created read and writes data binary compatible to the
+            BlowfishInputStream and BlowfishOutputStream of BlowfishJ.</summary>
+            <remarks>Streams produced and consumed by this class use an SHA-1 digest of the key material
+            as 160bit keys to set up the cipher. The data is encrypted using CBC, with the first block
+            being the initial (random) initialization vector. Padding is done with PKCS7. This means that
+            every stream is aligned to the block size of Blowfish. It also means that there is no
+            end-of-stream marker used.</remarks>
+        </member>
+        <member name="M:BlowfishNET.JavaInterop.BlowfishStream.Create(System.IO.Stream,BlowfishNET.JavaInterop.BlowfishStreamMode,System.Byte[],System.Int32,System.Int32)">
+            <summary>Creates a new Blowfish stream.</summary>
+            <param name="stm">The stream to read or write to.</param>
+            <param name="mode">Operation mode</param>
+            <param name="key">The buffer with the key material.</param>
+            <param name="ofs">Where the key material starts in the buffer.</param>
+            <param name="len">Length of the key material in bytes.</param>
+        </member>
+        <member name="T:BlowfishNET.Properties.Resources">
+            <summary>
+              一个强类型的资源类，用于查找本地化的字符串等。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.ResourceManager">
+            <summary>
+              返回此类使用的缓存的 ResourceManager 实例。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.Culture">
+            <summary>
+              使用此强类型资源类，为所有资源查找
+              重写当前线程的 CurrentUICulture 属性。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_BLOCKSIZE">
+            <summary>
+              查找类似 Invalid block size. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_CIPHERMODE">
+            <summary>
+              查找类似 Only ECB and CBC modes are supported. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_IV_LENGTH">
+            <summary>
+              查找类似 Invalid IV length. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_KEYSIZE">
+            <summary>
+              查找类似 Invalid key size. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_PADDATA_PKCS7_2">
+            <summary>
+              查找类似 Invalid PKCS7 padding data {0} at {1}. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_PADVAL_ANSIX923_1">
+            <summary>
+              查找类似 Invalid ANSIX923 padding value {0}. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_INVALID_PADVAL_PKCS7_1">
+            <summary>
+              查找类似 Invalid PKCS7 padding value {0}. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_NONZERO_PADDATA_ANSIX923_2">
+            <summary>
+              查找类似 Nonzero ANSIX923 padding data {0} at {1}. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_UNEXPECTED_LAST_BLOCK_COUNT_1">
+            <summary>
+              查找类似 Unexpected last block count {0}. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_UNKNOWN_PADDING_DECRYPT_1">
+            <summary>
+              查找类似 Unknown padding {0} for final decryption. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_UNKNOWN_PADDING_ENCRYPT_1">
+            <summary>
+              查找类似 Unknown padding {0} for final encryption. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.BFALGO_UNSUPPORTED_PADDINGMODE_1">
+            <summary>
+              查找类似 Unsupported padding mode {0}. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.JAVAIOP_CANNOT_READ_IV">
+            <summary>
+              查找类似 Cannot read IV, no more data. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.JAVAIOP_INVALID_PADDING_PATTERN">
+            <summary>
+              查找类似 Invalid padding pattern. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.JAVAIOP_INVALID_PADVAL">
+            <summary>
+              查找类似 Invalid padding value. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.JAVAIOP_LAST_BLOCK_TRUNCATED">
+            <summary>
+              查找类似 Last block is truncated. 的本地化字符串。
+            </summary>
+        </member>
+        <member name="P:BlowfishNET.Properties.Resources.JAVAIOP_TRUNCATED">
+            <summary>
+              查找类似 Data is truncated. 的本地化字符串。
+            </summary>
+        </member>
+    </members>
+</doc>
